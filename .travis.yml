@@ -10,7 +10,7 @@ before_install:
   - docker build -t jimmy/docker-react-app -f Dockerfile.dev .
 
 script:
-  - docker run -e CI=true jimmy/docker-react-app npm run test -- --converage
+  - docker run -e CI=true jimmy/docker-react-app npm run test -- --coverage
 
 
 after_success:
