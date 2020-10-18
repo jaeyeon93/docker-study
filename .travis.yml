@@ -7,22 +7,30 @@ services:
 
 before_install:
   - echo "start creating an image with dockerfile"
-  - docker build -t jimmy/docker-react-app -f Dockerfile.dev .
+  - docker build -t jimmy/react-test-app -f ./frontend/Dockerfile.dev ./frontend
 
 script:
-  - docker run -e CI=true jimmy/docker-react-app npm run test
-
-deploy:
-  provider: elasticbeanstalk
-  region: "ap-northeast-2"
-  app: "docker-react-app"
-  env: "DockerReactApp-env"
-  bucket_name: "elasticbeanstalk-ap-northeast-2-194829314461"
-  bucket_path: "docker-react-app"
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_key_key: $AWS_SECRET_ACCESS_KEY
+  - docker run -e CI=true jimmy/react-test-app npm run test
 
 after_success:
   - echo "Test Success"
+  - docker build -t jimmy/docker-frontend ./frontend
+  - docker build -t jimmy/docker-backend ./backend
+  - docker build -t jimmy/docker-nginx ./nginx
+  - ehco "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+
+  - docker push jimmy/docker-frontend
+  - docker push jimmy/docker-backend
+  - docker push jimmy/docker-nginx
+
+#deploy:
+#  provider: elasticbeanstalk
+#  region: "ap-northeast-2"
+#  app: "docker-react-app"
+#  env: "DockerReactApp-env"
+#  bucket_name: "elasticbeanstalk-ap-northeast-2-194829314461"
+#  bucket_path: "docker-react-app"
+#  on:
+#    branch: master
+#  access_key_id: $AWS_ACCESS_KEY
+#  secret_key_key: $AWS_SECRET_ACCESS_KEY
