@@ -23,14 +23,14 @@ after_success:
   - docker push jimmy/docker-backend
   - docker push jimmy/docker-nginx
 
-#deploy:
-#  provider: elasticbeanstalk
-#  region: "ap-northeast-2"
-#  app: "docker-react-app"
-#  env: "DockerReactApp-env"
-#  bucket_name: "elasticbeanstalk-ap-northeast-2-194829314461"
-#  bucket_path: "docker-react-app"
-#  on:
-#    branch: master
-#  access_key_id: $AWS_ACCESS_KEY
-#  secret_key_key: $AWS_SECRET_ACCESS_KEY
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-northeast-2"
+  app: "docker-multicontainer"
+  env: "DockerMulticontainer-env"
+  bucket_name: "elasticbeanstalk-ap-northeast-2-194829314461"
+  bucket_path: "docker-react-app"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_key_key: $AWS_SECRET_ACCESS_KEY
