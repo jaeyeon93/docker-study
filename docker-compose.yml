@@ -1,22 +1,44 @@
 version: "3"
 
 services:
-  react:
+  frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
     - 3000:3000
     volumes:
-    - /usr/src/app/node_modules
-    - ./:/usr/src/app
+    - /app/node_modules
+    - ./frontend:/app
     stdin_open: true
-  test:
+
+  nginx:
+    restart: always
     build:
-      context: .
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3000:80"
+
+  backend:
+    build:
       dockerfile: Dockerfile.dev
+      context: ./backend
+    container_name: app_backend
     volumes:
-      - /usr/src/app/node_modules
-      - ./:/usr/src/app
-    command: ["npm", "run","test"]
+    - /app/node_modules
+    - ./backend:/app
+
+#  mysql:
+#    build: ./mysql
+#    restart: unless-stopped
+#    container_name: app_mysql
+#    ports:
+#    - "33060:3306"
+#    volumes:
+#    - ./mysql/mysql_data:/var/lib/mysql
+#    - ./mysql/sqls/:/docker-entrypoint-initdb.d/
+#    environment:
+#      MYSQL_ROOT_PASSWORD:
+#      MYSQL_DATABASE:
 
